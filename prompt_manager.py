@@ -108,15 +108,38 @@ def show_list():
 
 def search_prompt():
     print("\n=== 프롬프트 검색 ===")
-    keyword = input("검색어를 입력하세요: ").strip()
-    results = [p for p in prompts if keyword in p["title"] or keyword in p["content"]]
-    if len(results) == 0:
-        print("🔍 검색 결과가 없습니다.")
+    keyword = input("검색어를 입력하세요: ")
+    results = []
+
+    for i, prompt in enumerate(prompts):
+        if keyword in prompt['title'] or keyword in prompt['content']:
+            results.append((i + 1, prompt))
+
+    if results:
+        print(f"\n🔍 '{keyword}' 검색 결과: {len(results)}개")
+        for num, prompt in results:
+            print(f"{num}. [{prompt['category']}] {prompt['title']}")
     else:
-        print(f"\n=== 검색 결과 ({len(results)}개) ===")
-        for i, p in enumerate(results, 1):
-            fav = "⭐" if p["favorite"] else "  "
-            print(f"{i}. {fav} [{p['category']}] {p['title']}")
+        print("❌ 검색 결과가 없습니다.")
+
+def delete_prompt():
+    print("\n=== 프롬프트 삭제 ===")
+    show_list()
+
+    try:
+        num = int(input("\n삭제할 번호를 입력하세요: "))
+        if 1 <= num <= len(prompts):
+            deleted = prompts[num - 1]
+            confirm = input(f"'{deleted['title']}'을(를) 삭제할까요? (y/n): ")
+            if confirm.lower() == 'y':
+                prompts.pop(num - 1)
+                print("✅ 삭제되었습니다!")
+            else:
+                print("❌ 삭제를 취소했습니다.")
+        else:
+            print("❌ 올바른 번호를 입력하세요.")
+    except ValueError:
+        print("❌ 숫자를 입력하세요.")
 
 
 def show_menu():
@@ -126,7 +149,8 @@ def show_menu():
     print("1. 프롬프트 추가")
     print("2. 프롬프트 목록 보기")
     print("3. 프롬프트 검색")
-    print("4. 종료")
+    print("4. 프롬프트 삭제")
+    print("5. 종료")
     print("=============================")
 
 
@@ -143,10 +167,12 @@ def main():
         elif choice == "3":
             search_prompt()
         elif choice == "4":
+            delete_prompt()        
+        elif choice == "5":        
             print("프로그램을 종료합니다. 👋")
             break
         else:
-            print("❌ 1, 2, 3, 4 중에서 선택하세요!")
+            print("❌ 1~5 중에서 선택하세요!")   
 
 
 if __name__ == "__main__":
