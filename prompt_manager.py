@@ -149,8 +149,9 @@ def show_menu():
     print("1. 프롬프트 추가")
     print("2. 프롬프트 목록 보기")
     print("3. 프롬프트 검색")
-    print("4. 프롬프트 삭제")
-    print("5. 종료")
+    print("4. 카테고리별 조회")   
+    print("5. 프롬프트 삭제")     
+    print("6. 종료")              
     print("=============================")
 
 
@@ -167,13 +168,39 @@ def main():
         elif choice == "3":
             search_prompt()
         elif choice == "4":
-            delete_prompt()        
+            filter_by_category()        
         elif choice == "5":        
+            delete_prompt()
+        elif choice == "6":        
             print("프로그램을 종료합니다. 👋")
             break
         else:
-            print("❌ 1~5 중에서 선택하세요!")   
+                print("❌ 1~6 중에서 선택하세요!")  
 
+def filter_by_category():
+    print("\n=== 카테고리별 조회 ===")
+    
+    for i, category in enumerate(CATEGORIES, 1):
+        print(f"{i}. {category}")
+    
+    choice = input("\n카테고리 번호를 선택하세요: ").strip()
+    
+    if not choice.isdigit() or not (1 <= int(choice) <= len(CATEGORIES)):
+        print("올바른 번호를 입력하세요.")
+        return
+    
+    selected = CATEGORIES[int(choice) - 1]
+    result = [p for p in prompts if p["category"] == selected]
+    
+    if not result:
+        print(f"'{selected}' 카테고리에 등록된 프롬프트가 없습니다.")
+        return
+    
+    print(f"\n[{selected}] 카테고리 프롬프트 목록")
+    print("-" * 30)
+    for i, p in enumerate(result, 1):
+        star = "⭐" if p["favorite"] else ""
+        print(f"{i}. {p['title']} {star}")
 
 if __name__ == "__main__":
     main()
