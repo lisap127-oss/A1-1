@@ -141,6 +141,36 @@ def delete_prompt():
     except ValueError:
         print("❌ 숫자를 입력하세요.")
 
+def toggle_favorite():
+    print("\n=== 즐겨찾기 설정 ===")
+    show_list()
+
+    try:
+        num = int(input("\n번호를 선택하세요: "))
+        if 1 <= num <= len(prompts):
+            prompt = prompts[num - 1]
+            prompt["favorite"] = not prompt["favorite"]  # True↔False 전환
+
+            if prompt["favorite"]:
+                print(f"⭐ '{prompt['title']}' 즐겨찾기에 추가했습니다!")
+            else:
+                print(f"☆ '{prompt['title']}' 즐겨찾기를 해제했습니다.")
+        else:
+            print("❌ 올바른 번호를 입력하세요.")
+    except ValueError:
+        print("❌ 숫자를 입력하세요.")   
+
+def show_favorites():
+    print("\n=== ⭐ 즐겨찾기 목록 ===")
+    result = [p for p in prompts if p["favorite"]]  # favorite=True만 필터링
+
+    if not result:
+        print("즐겨찾기한 프롬프트가 없습니다.")
+        return
+
+    print(f"총 {len(result)}개")
+    for i, p in enumerate(result, 1):
+        print(f"{i}. ⭐ [{p['category']}] {p['title']}")
 
 def show_menu():
     print("\n=============================")
@@ -151,7 +181,9 @@ def show_menu():
     print("3. 프롬프트 검색")
     print("4. 카테고리별 조회")   
     print("5. 프롬프트 삭제")     
-    print("6. 종료")              
+    print("6. ⭐ 즐겨찾기 설정")   
+    print("7. ⭐ 즐겨찾기 목록")  
+    print("8. 종료")              
     print("=============================")
 
 
@@ -172,10 +204,14 @@ def main():
         elif choice == "5":        
             delete_prompt()
         elif choice == "6":        
+            toggle_favorite()
+        elif choice == "7":
+            show_favorites()
+        elif choice == "8":
             print("프로그램을 종료합니다. 👋")
             break
         else:
-                print("❌ 1~6 중에서 선택하세요!")  
+                print("❌ 1~8 중에서 선택하세요!")  
 
 def filter_by_category():
     print("\n=== 카테고리별 조회 ===")
