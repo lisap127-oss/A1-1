@@ -77,6 +77,15 @@ def add_prompt():
     print(f"\n✅ '{title}' 프롬프트가 추가되었습니다!")
 
 
+def show_detail(prompt):
+    print("\n=== 상세 보기 ===")
+    fav = "⭐" if prompt["favorite"] else "없음"
+    print(f"제목     : {prompt['title']}")
+    print(f"카테고리 : {prompt['category']}")
+    print(f"즐겨찾기 : {fav}")
+    print(f"내용     :\n{prompt['content']}")
+
+
 def show_list():
     print("\n=== 프롬프트 목록 ===")
     if len(prompts) == 0:
@@ -85,6 +94,16 @@ def show_list():
     for i, p in enumerate(prompts, 1):
         fav = "⭐" if p["favorite"] else "  "
         print(f"{i}. {fav} [{p['category']}] {p['title']}")
+
+    # 상세 보기 선택 추가!
+    while True:
+        choice = input("\n상세 보기할 번호를 선택하세요 (0: 돌아가기): ").strip()
+        if choice == "0":
+            break
+        if choice.isdigit() and 1 <= int(choice) <= len(prompts):
+            show_detail(prompts[int(choice) - 1])
+            break
+        print("❌ 올바른 번호를 선택하세요!")
 
 
 def search_prompt():
